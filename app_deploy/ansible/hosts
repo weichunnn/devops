@@ -1,0 +1,6 @@
+[webservers]
+ubuntu@13.229.209.214 ansible_ssh_private_key_file=~/.ssh/devops.pem
+
+
+[jenkins]
+ubuntu@54.169.171.26 ansible_ssh_private_key_file=~/.ssh/devops.pem

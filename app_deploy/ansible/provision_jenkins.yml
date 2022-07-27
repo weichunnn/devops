@@ -1,0 +1,25 @@
+---
+- name: configure jenkins server
+  hosts: jenkins
+  tasks:
+    - name: install java req
+      apt:
+        update_cache: yes
+        name: default-jdk
+      become: yes
+
+    - name: install jenkins
+      shell: |
+        curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+        /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+        echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+          https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+          /etc/apt/sources.list.d/jenkins.list > /dev/null
+        sudo apt-get update -y
+        sudo apt-get install jenkins -y
+
+    - name: run jenkins
+      shell: |
+        systemctl enable jenkins
+        systemctl start jenkins
+      become: yes
