@@ -1,0 +1,16 @@
+## sample local state management
+
+```
+terraform.tfvars
+profile="dev" # aws profile
+password="7CA3e2ycFqMgmkG" # default db password
+id="django-rds" # id of instance
+
+```
+
+## password generation
+
+```
+brew install pwgen
+pwgen -s 15 -1
+```
