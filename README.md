@@ -20,7 +20,7 @@ https://bbs.archlinux.org/viewtopic.php?id=270005
 ```
 
 
-## Ansible Playbook Invoke Through Jenkins
+## Ansible Playbook Cannot Invoke Through Jenkins
 1. Python Download of Pip seems to not play well (ansible is install on user locally and jenkins unable to access)
 2. Install and setup via apt-get is workable (with other python modules)
 
