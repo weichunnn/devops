@@ -1,4 +1,17 @@
 # Documenting Dev Ops Journey
+
+# Tech Stack 
+1. Terraform
+2. Ansible
+3. Jenkins
+4. Kubernetes
+5. Docker
+
+# Experiments Explored
+1. Immutable Infrastructure
+2. Button Click Deployment
+3. Reverse Proxy Hosting with SSL Certificate (self signed & Let's Encrypt Automtation)
+
 # Issues Faces and Solved
 
 ## Docker Build on M1 Mac
