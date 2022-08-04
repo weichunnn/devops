@@ -1,0 +1,40 @@
+pipeline {
+  agent any
+  parameters {
+    choice(
+      name: 'Action'
+      choices: "apply\ndestroy"
+      description: "apply or destroy an instance"
+    )
+  }
+
+  stages {
+    stage("checkout") {
+      steps {
+        git branch: 'master', credentialsId: '691a13ab-4efd-4cef-97a4-4478039494c9', url: 'git@github.com:weichunnn/devops.git'
+      }
+    }
+
+    stage("terraform") {
+      steps {
+        script {
+          if (params.Action == "apply") {
+            sh 'terraform -chdir=reverse_proxy/terraform/static-site init'
+            sh 'terraform -chdir=reverse_proxy/terraform/static-site apply -var "name=hello-world" -var "group=web" -var "region=ap-southeast-1" -var "profile=DevOpsUser" --auto-approve'
+          } 
+          else {
+            sh 'terraform -chdir=reverse_proxy/terraform/static-site destroy -var "name=hello-world" -var "group=web" -var "region=ap-southeast-1" -var "profile=DevOpsUser" --auto-approve'
+          }
+        }
+      }
+    }
+
+    stage("ansible") {
+      steps {
+        retry(count: 5) {
+          sh "ansible-playbook -i /etc/ansible/aws_ec2.yaml reverse_proxy/ansible/site.yaml"
+        }
+      }
+    }
+  }
+}
