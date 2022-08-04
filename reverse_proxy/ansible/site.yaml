@@ -12,6 +12,7 @@
       shell: |
         systemctl start docker
         systemctl enable docker
+      become: yes
 
     - name: run image
       shell: docker run --name hello-world -d -p 80:80 -p 443:443 weichunnn/nginx-static
