@@ -37,8 +37,10 @@ pipeline {
 
     stage("build image") {
       steps {
-        script {
-          customImage = docker.build(imageName)
+        dir('cicd-pipeline') {
+          script {
+            customImage = docker.build(imageName)
+          }
         }
       }
     }
@@ -49,9 +51,11 @@ pipeline {
         branch "master"
       }
       steps {
-        script {
-          docker.withRegistry('', 'Dockerhub') {
-            customImage.push()
+        dir('cicd-pipeline') {
+          script {
+            docker.withRegistry('', 'Dockerhub') {
+              customImage.push()
+            }
           }
         }
       }
