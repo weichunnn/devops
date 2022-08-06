@@ -22,12 +22,12 @@ pipeline {
       }
       post {
         success {
-          script {
+          dir('cicd-pipeline') {
             sh "docker compose down"
           }
         }
         failure {
-          script {
+          dir('cicd-pipeline') {
             sh "docker compose down"
           }
         }
