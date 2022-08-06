@@ -9,9 +9,7 @@ pipeline {
     stage('start container for testing') {
       steps {
         dir('cicd-pipeline') {
-          script {
-            sh "docker compose rm -f; docker compose up -d images"
-          }
+          sh "docker compose rm -f; docker compose up -d images"
         }
       }
     }
@@ -19,9 +17,7 @@ pipeline {
     stage("run test") {
       steps {
         dir('cicd-pipeline') {
-          script {
-            sh "pip3 install -r requirements.txt; python3 -m pytest tests"
-          }
+          sh "pip3 install -r requirements.txt; python3 -m pytest tests"
         }
       }
       post {
@@ -40,11 +36,9 @@ pipeline {
 
 
     stage("build image") {
-      dir('cicd-pipeline') {
-        steps {
-          script {
-            customImage = docker.build(imageName)
-          }
+      steps {
+        script {
+          customImage = docker.build(imageName)
         }
       }
     }
@@ -55,11 +49,9 @@ pipeline {
         branch "master"
       }
       steps {
-        dir('cicd-pipeline') {
-          script {
-            docker.withRegistry('', 'Dockerhub') {
-              customImage.push()
-            }
+        script {
+          docker.withRegistry('', 'Dockerhub') {
+            customImage.push()
           }
         }
       }
