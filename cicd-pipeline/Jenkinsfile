@@ -1,5 +1,4 @@
 pipeline {
-  agent any
   environment {
     imageName = "weichunnn/falcon-image-app:${env.BUILD_ID}"
     customImage = ""
