@@ -6,40 +6,41 @@ pipeline {
   }
 
   stages {
-    dir('cicd-pipeline') {
-      stage('start container for testing') {
-        steps {
-            script {
-              sh "docker compose rm -f; docker compose up -d images"
-            }
-          }
-        }
-    }
-
-    dir('cicd-pipeline') {
-      stage("run test") {
-        steps {
+    stage('start container for testing') {
+      steps {
+        dir('cicd-pipeline') {
           script {
-            sh "pip3 install -r requirements.txt; python3 -m pytest tests"
-          }
-        }
-        post {
-          success {
-            script {
-              sh "docker compose down"
-            }
-          }
-          failure {
-            script {
-              sh "docker compose down"
-            }
+            sh "docker compose rm -f; docker compose up -d images"
           }
         }
       }
     }
 
-    dir('cicd-pipeline') {
-      stage("build image") {
+    stage("run test") {
+      steps {
+        dir('cicd-pipeline') {
+          script {
+            sh "pip3 install -r requirements.txt; python3 -m pytest tests"
+          }
+        }
+      }
+      post {
+        success {
+          script {
+            sh "docker compose down"
+          }
+        }
+        failure {
+          script {
+            sh "docker compose down"
+          }
+        }
+      }
+    }
+
+
+    stage("build image") {
+      dir('cicd-pipeline') {
         steps {
           script {
             customImage = docker.build(imageName)
@@ -48,12 +49,13 @@ pipeline {
       }
     }
 
-    dir('cicd-pipeline') {
-      stage("push to registry") {
-        when {
-          branch "master"
-        }
-        steps {
+
+    stage("push to registry") {
+      when {
+        branch "master"
+      }
+      steps {
+        dir('cicd-pipeline') {
           script {
             docker.withRegistry('', 'Dockerhub') {
               customImage.push()
