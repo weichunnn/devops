@@ -1,0 +1,8 @@
+version: '3.3'
+
+services:
+  images:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
