@@ -1,0 +1,66 @@
+pipeline {
+  agent any
+  environment {
+    imageName = "weichunnn/falcon-image-app:${env.BUILD_ID}"
+    customImage = ""
+  }
+
+  stages {
+    stage('cd into repo') {
+      steps {
+        script {
+          sh "cd cicd-pipeline"
+        }
+      }
+    }
+
+    stage('start container for testing') {
+      steps {
+        script {
+          sh "docker compose rm -f; docker compose up -d images"
+        }
+      }
+    }
+
+    stage("run test") {
+      steps {
+        script {
+          sh "pip3 install -r requirements.txt; python3 -m pytest tests"
+        }
+      }
+      post {
+        success {
+          script {
+            sh "docker compose down"
+          }
+        }
+        failure {
+          script {
+            sh "docker compose down"
+          }
+        }
+      }
+    }
+
+    stage("build image") {
+      steps {
+        script {
+          customImage = docker.build(imageName)
+        }
+      }
+    }
+
+    stage("push to registry") {
+      when {
+        branch "master"
+      }
+      steps {
+        script {
+          docker.withRegistry('', 'Dockerhub') {
+            customImage.push()
+          }
+        }
+      }
+    }
+  }
+}
