@@ -44,8 +44,8 @@ def test_post_image(client, mock_store):
 
     response = client.simulate_post("/images", body=b"some-fake-bytes", headers={"content-type": image_content_type})
 
-    # assert response.status == falcon.HTTP_CREATED
-    assert response.status == falcon.HTTP_400
+    assert response.status == falcon.HTTP_CREATED
+    # assert response.status == falcon.HTTP_400
 
     assert response.headers["location"] == "/images/{}".format(file_name)
     saver_call = mock_store.save.call_args
